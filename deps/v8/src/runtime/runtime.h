@@ -72,6 +72,7 @@ namespace internal {
   F(ThrowConstructorNonCallableError, 1, 1)  \
   F(ThrowStaticPrototypeError, 0, 1)         \
   F(ThrowSuperAlreadyCalledError, 0, 1)      \
+  F(ThrowSuperNotCalled, 0, 1)               \
   F(ThrowNotSuperConstructor, 2, 1)          \
   F(HomeObjectSymbol, 0, 1)                  \
   F(DefineClass, 4, 1)                       \
@@ -116,7 +117,6 @@ namespace internal {
 
 #define FOR_EACH_INTRINSIC_COMPILER(F)    \
   F(CompileLazy, 1, 1)                    \
-  F(CompileBaseline, 1, 1)                \
   F(CompileOptimized_Concurrent, 1, 1)    \
   F(CompileOptimized_NotConcurrent, 1, 1) \
   F(NotifyStubFailure, 0, 1)              \
@@ -397,7 +397,7 @@ namespace internal {
   F(IsJSGlobalProxy, 1, 1)                                      \
   F(DefineAccessorPropertyUnchecked, 5, 1)                      \
   F(DefineDataPropertyInLiteral, 6, 1)                          \
-  F(CollectTypeProfile, 4, 1)                                   \
+  F(CollectTypeProfile, 3, 1)                                   \
   F(GetDataProperty, 2, 1)                                      \
   F(GetConstructorName, 1, 1)                                   \
   F(HasFastPackedElements, 1, 1)                                \
@@ -554,8 +554,6 @@ namespace internal {
   F(IsConcurrentRecompilationSupported, 0, 1) \
   F(OptimizeFunctionOnNextCall, -1, 1)        \
   F(PrintTypeProfile, 1, 1)                   \
-  F(InterpretFunctionOnNextCall, 1, 1)        \
-  F(BaselineFunctionOnNextCall, 1, 1)         \
   F(OptimizeOsr, -1, 1)                       \
   F(NeverOptimizeFunction, 1, 1)              \
   F(GetOptimizationStatus, -1, 1)             \
@@ -780,25 +778,6 @@ class Runtime : public AllStatic {
   MUST_USE_RESULT static MaybeHandle<Object> GetObjectProperty(
       Isolate* isolate, Handle<Object> object, Handle<Object> key,
       bool* is_found_out = nullptr);
-
-  enum TypedArrayId {
-    // arrayIds below should be synchronized with typedarray.js natives.
-    ARRAY_ID_UINT8 = 1,
-    ARRAY_ID_INT8 = 2,
-    ARRAY_ID_UINT16 = 3,
-    ARRAY_ID_INT16 = 4,
-    ARRAY_ID_UINT32 = 5,
-    ARRAY_ID_INT32 = 6,
-    ARRAY_ID_FLOAT32 = 7,
-    ARRAY_ID_FLOAT64 = 8,
-    ARRAY_ID_UINT8_CLAMPED = 9,
-    ARRAY_ID_FIRST = ARRAY_ID_UINT8,
-    ARRAY_ID_LAST = ARRAY_ID_UINT8_CLAMPED
-  };
-
-  static void ArrayIdToTypeAndSize(int array_id, ExternalArrayType* type,
-                                   ElementsKind* fixed_elements_kind,
-                                   size_t* element_size);
 
   static const char* ElementsKindToType(ElementsKind fixed_elements_kind);
 
